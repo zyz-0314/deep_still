@@ -1,4 +1,6 @@
-# focus_timer
+# Deep Still
+
+Deep focus, deep calm — a mindful space for uninterrupted work.
 
 ## Project setup
 ```
