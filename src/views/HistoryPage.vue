@@ -154,8 +154,13 @@ export default {
   inset: 0;
   overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-width: none;
   background: #08080c;
   color: #fff;
+}
+
+.history-page::-webkit-scrollbar {
+  display: none;
 }
 
 .history-bg {
