@@ -8,33 +8,33 @@
           <line x1="19" y1="12" x2="5" y2="12" />
           <polyline points="12 19 5 12 12 5" />
         </svg>
-        <span>Back</span>
+        <span>{{ t('back') }}</span>
       </button>
 
       <div class="history-header">
-        <h1 class="history-title">Session History</h1>
+        <h1 class="history-title">{{ t('sessionHistory') }}</h1>
 
         <div v-if="sessions.length > 0" class="history-stats-row">
           <div class="history-stat">
             <span class="history-stat-value">{{ streak }}</span>
-            <span class="history-stat-label">day streak</span>
+            <span class="history-stat-label">{{ t('dayStreak') }}</span>
           </div>
           <div class="history-stat-divider"></div>
           <div class="history-stat">
             <span class="history-stat-value">{{ totalSessions }}</span>
-            <span class="history-stat-label">sessions</span>
+            <span class="history-stat-label">{{ t('sessions') }}</span>
           </div>
           <div class="history-stat-divider"></div>
           <div class="history-stat">
             <span class="history-stat-value">{{ totalMinutes }}</span>
-            <span class="history-stat-label">total min</span>
+            <span class="history-stat-label">{{ t('totalMin') }}</span>
           </div>
         </div>
       </div>
 
       <div v-if="sessions.length === 0" class="history-empty">
         <span class="history-empty-icon">○</span>
-        <p class="history-empty-text">No sessions yet.<br />Complete a focus session to see it here.</p>
+        <p class="history-empty-text">{{ t('noSessions') }}</p>
       </div>
 
       <div v-else class="history-list">
@@ -56,7 +56,7 @@
       </div>
 
       <button v-if="sessions.length > 0" class="clear-btn" @click="clearAll">
-        <span>Clear history</span>
+        <span>{{ t('clearHistory') }}</span>
       </button>
     </div>
 
@@ -71,13 +71,14 @@
         <path d="M2 17l10 5 10-5" />
         <path d="M2 12l10 5 10-5" />
       </svg>
-      <span>Parallax</span>
+      <span>{{ t('parallax') }}</span>
     </button>
   </div>
 </template>
 
 <script>
 import { getSessions, computeStreak, getTotalFocusMinutes, clearSessions } from '@/data/storage'
+import { $t } from '@/data/i18n'
 
 export default {
   name: 'HistoryPage',
@@ -90,6 +91,9 @@ export default {
     }
   },
   computed: {
+    t() {
+      return (key, params) => $t(key, params)
+    },
     streak() {
       return computeStreak()
     },
@@ -120,7 +124,7 @@ export default {
       return `${s}s`
     },
     clearAll() {
-      if (confirm('Clear all session history?')) {
+      if (confirm(this.t ? this.t('confirmClear') : 'Clear all session history?')) {
         clearSessions()
         this.sessions = []
       }
@@ -275,6 +279,7 @@ export default {
   color: rgba(255, 255, 255, 0.3);
   text-align: center;
   line-height: 1.7;
+  white-space: pre-line;
 }
 
 .history-list {
@@ -393,5 +398,60 @@ export default {
 
 .bottom-action-btn.parallax-toggle.active svg {
   stroke: #fff;
+}
+
+@media (max-width: 600px) {
+  .history-layout {
+    padding: 24px 16px calc(96px + var(--safe-bottom));
+  }
+
+  .back-btn {
+    margin-bottom: 24px;
+  }
+
+  .history-header {
+    margin-bottom: 24px;
+  }
+
+  .history-title {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  .history-stats-row {
+    width: 100%;
+    justify-content: space-between;
+    padding: 14px 12px;
+    gap: 8px;
+  }
+
+  .history-stat-value {
+    font-size: 20px;
+  }
+
+  .history-stat-label {
+    font-size: 9px;
+  }
+
+  .history-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 14px 16px;
+  }
+
+  .history-item-intention {
+    max-width: 100%;
+    text-align: left;
+    white-space: normal;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .bottom-action-btn {
+    bottom: calc(24px + var(--safe-bottom));
+  }
 }
 </style>

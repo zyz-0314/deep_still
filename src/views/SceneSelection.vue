@@ -22,7 +22,7 @@
               <line x1="19" y1="12" x2="5" y2="12" />
               <polyline points="12 19 5 12 12 5" />
             </svg>
-            <span>Back</span>
+            <span>{{ t('back') }}</span>
           </button>
         </div>
 
@@ -46,8 +46,8 @@
           <div class="scene-panel-wrapper" :style="{ transform: panelParallax }">
             <div class="scene-panel">
               <div class="panel-header">
-                <h3 class="panel-title">Choose your scene</h3>
-                <p class="panel-desc">Select an environment for your focus session</p>
+                <h3 class="panel-title">{{ t('chooseScene') }}</h3>
+                <p class="panel-desc">{{ t('sceneDesc') }}</p>
               </div>
 
               <div class="scene-grid">
@@ -75,7 +75,7 @@
 
               <div class="panel-footer">
                 <button class="continue-btn" @click="goToFocus">
-                  <span>Continue with {{ currentScene.name }}</span>
+                  <span>{{ t('continueWith', { name: currentScene.name }) }}</span>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="5" y1="12" x2="19" y2="12" />
                     <polyline points="12 5 19 12 12 19" />
@@ -99,13 +99,14 @@
         <path d="M2 17l10 5 10-5" />
         <path d="M2 12l10 5 10-5" />
       </svg>
-      <span>Parallax</span>
+      <span>{{ t('parallax') }}</span>
     </button>
   </div>
 </template>
 
 <script>
 import { scenes } from '@/data/scenes'
+import { $t } from '@/data/i18n'
 
 export default {
   name: 'SceneSelection',
@@ -122,6 +123,9 @@ export default {
     }
   },
   computed: {
+    t() {
+      return (key, params) => $t(key, params)
+    },
     currentScene() {
       return this.scenes.find(s => s.id === this.selectedScene) || this.scenes[0]
     },
@@ -550,6 +554,34 @@ export default {
   }
   .scene-layout {
     padding: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .scene-layout {
+    padding: 16px;
+    overflow-y: auto;
+  }
+  .scene-main {
+    justify-content: flex-start;
+  }
+  .panel-title {
+    font-size: 26px;
+  }
+  .scene-card {
+    padding: 10px;
+  }
+  .bottom-action-btn {
+    bottom: calc(24px + var(--safe-bottom));
+  }
+}
+
+@media (max-height: 700px) {
+  .scene-layout {
+    overflow-y: auto;
+  }
+  .scene-main {
+    justify-content: flex-start;
   }
 }
 </style>

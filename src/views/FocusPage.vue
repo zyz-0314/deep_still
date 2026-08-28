@@ -8,7 +8,7 @@
           :aria-selected="backgroundType === 'solid'"
           @click="setBackground('solid')"
         >
-          solid
+          {{ t('modeSolid') }}
         </div>
         <div class="bkg-divider" aria-hidden="true"></div>
         <div
@@ -17,7 +17,7 @@
           :aria-selected="backgroundType === 'scene'"
           @click="setBackground('scene')"
         >
-          scene
+          {{ t('modeScene') }}
         </div>
       </div>
     </div>
@@ -33,7 +33,7 @@
         class="focus-bg-veil"
         :style="veilStyleWithParallax"
       ></div>
-      <div v-if="backgroundType === 'scene' && selectedImageAuthor" class="scene-author">shot by {{ selectedImageAuthor }}</div>
+      <div v-if="backgroundType === 'scene' && selectedImageAuthor" class="scene-author">{{ t('shotBy', { author: selectedImageAuthor }) }}</div>
     </div>
 
     <div class="focus-layout">
@@ -45,14 +45,14 @@
               <circle cx="8.5" cy="8.5" r="1.5" />
               <polyline points="21 15 16 10 5 21" />
             </svg>
-            <span>photographic</span>
+            <span>{{ t('photographic') }}</span>
           </button>
           <button v-if="selectedImage" class="bottom-action-btn" type="button" @click="isAdjustPanelOpen = !isAdjustPanelOpen">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="3" />
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
             </svg>
-            <span>adjust</span>
+            <span>{{ t('adjust') }}</span>
           </button>
         </div>
         <button
@@ -66,7 +66,7 @@
             <path d="M2 17l10 5 10-5" />
             <path d="M2 12l10 5 10-5" />
           </svg>
-          <span>Parallax</span>
+          <span>{{ t('parallax') }}</span>
         </button>
       </div>
 
@@ -83,7 +83,7 @@
           <div class="duration-collapse" :class="{ collapsed: isRunning || isCompleted }">
             <div class="duration-collapse-inner">
               <div class="duration-selector">
-                <span class="duration-label">Session length</span>
+                <span class="duration-label">{{ t('sessionLength') }}</span>
                 <div class="duration-options">
                   <button
                     v-for="d in durations"
@@ -111,7 +111,7 @@
                       class="custom-trigger"
                       @click="openCustom"
                     >
-                      Custom
+                      {{ t('custom') }}
                     </button>
                   </div>
                 </div>
@@ -125,7 +125,7 @@
                 <input
                   v-model="intention"
                   class="intention-input"
-                  placeholder="What do you want to focus on?"
+                  :placeholder="t('intentionPlaceholder')"
                   maxlength="80"
                   @keydown.enter="$refs.startBtn?.focus()"
                 />
@@ -143,7 +143,7 @@
               <template v-else-if="isCompleted && !sessionStats">
                 <div class="completed-message">
                   <span class="completed-icon">○</span>
-                  <span class="completed-text">Session complete</span>
+                  <span class="completed-text">{{ t('sessionComplete') }}</span>
                 </div>
               </template>
             </div>
@@ -167,7 +167,7 @@
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <polygon points="5 3 19 12 5 21 5 3" />
                   </svg>
-                  <span>Start</span>
+                  <span>{{ t('start') }}</span>
                 </button>
               </div>
 
@@ -177,7 +177,7 @@
                     <rect x="6" y="4" width="4" height="16" />
                     <rect x="14" y="4" width="4" height="16" />
                   </svg>
-                  <span>Pause</span>
+                  <span>{{ t('pause') }}</span>
                 </button>
                 <button class="control-btn ghost" @click="resetTimer">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -192,7 +192,7 @@
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <polygon points="5 3 19 12 5 21 5 3" />
                   </svg>
-                  <span>New session</span>
+                  <span>{{ t('newSession') }}</span>
                 </button>
                 <button class="control-btn ghost" @click="exitFocus">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -222,7 +222,7 @@
       >
         <div class="adjust-panel">
           <div class="adjust-panel-header">
-            <span class="adjust-panel-title">Image adjustments</span>
+            <span class="adjust-panel-title">{{ t('imageAdjustments') }}</span>
             <button class="adjust-close" type="button" @click="isAdjustPanelOpen = false">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18" />
@@ -239,7 +239,7 @@
                   <line x1="12" y1="2" x2="12" y2="6" />
                   <line x1="12" y1="18" x2="12" y2="22" />
                 </svg>
-                <span>Brightness</span>
+                <span>{{ t('brightness') }}</span>
               </div>
               <div class="adjust-row-control">
                 <input
@@ -260,7 +260,7 @@
                   <path d="M8 8l4-4 4 4" />
                   <path d="M8 16l4 4 4-4" />
                 </svg>
-                <span>Blur</span>
+                <span>{{ t('blur') }}</span>
               </div>
               <div class="adjust-row-control">
                 <input
@@ -281,7 +281,7 @@
 
     <transition name="fade">
       <div v-if="isFullscreen" class="fullscreen-hint" key="fs-hint">
-        Press <kbd>F11</kbd> to exit full-screen mode
+        {{ t('exitFullscreen', { key: 'F11' }) }}
       </div>
     </transition>
 
@@ -299,28 +299,28 @@
         <div class="stats-card">
           <div class="stats-header">
             <span class="stats-icon">○</span>
-            <span class="stats-title">Session complete</span>
+            <span class="stats-title">{{ t('sessionComplete') }}</span>
           </div>
 
           <div class="stats-metrics">
             <div class="stats-metric">
-              <span class="stats-metric-label">Duration</span>
+              <span class="stats-metric-label">{{ t('duration') }}</span>
               <span class="stats-metric-value">{{ statsDuration }}</span>
             </div>
             <div class="stats-divider"></div>
             <div class="stats-metric">
-              <span class="stats-metric-label">Scene</span>
+              <span class="stats-metric-label">{{ t('scene') }}</span>
               <span class="stats-metric-value">{{ sessionStats.scene }}</span>
             </div>
             <div class="stats-divider"></div>
             <div class="stats-metric">
-              <span class="stats-metric-label">Date</span>
+              <span class="stats-metric-label">{{ t('date') }}</span>
               <span class="stats-metric-value">{{ statsDate }}</span>
             </div>
           </div>
 
           <div v-if="sessionStats.intention" class="stats-intention">
-            <span class="stats-intention-label">Intention</span>
+            <span class="stats-intention-label">{{ t('intention') }}</span>
             <p class="stats-intention-text">{{ sessionStats.intention }}</p>
           </div>
 
@@ -330,7 +330,7 @@
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
               </svg>
-              <span>{{ copied ? 'Copied' : 'Copy summary' }}</span>
+              <span>{{ copied ? t('copied') : t('copySummary') }}</span>
             </button>
             <div class="stats-actions-row">
               <button class="stats-btn" @click="newSession">
@@ -338,14 +338,14 @@
                   <polyline points="23 4 23 10 17 10" />
                   <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
                 </svg>
-                <span>New session</span>
+                <span>{{ t('newSession') }}</span>
               </button>
               <button class="stats-btn ghost" @click="exitFocus">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18" />
                   <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
-                <span>Close</span>
+                <span>{{ t('close') }}</span>
               </button>
             </div>
           </div>
@@ -356,6 +356,7 @@
 </template>
 
 <script>
+import { $t } from '@/data/i18n'
 import { scenes, defaultMotivationalTexts, focusDurations } from '@/data/scenes'
 import { samples } from '@/data/samples'
 import { saveSession } from '@/data/storage'
@@ -406,6 +407,9 @@ export default {
     }
   },
   computed: {
+    t() {
+      return (key, params) => $t(key, params)
+    },
     currentScene() {
       const sceneId = this.$route.query.scene || 'lake'
       return this.scenes.find(s => s.id === sceneId) || this.scenes[0]
@@ -597,9 +601,9 @@ export default {
       const mins = Math.floor(this.sessionStats.totalSeconds / 60)
       const secs = this.sessionStats.totalSeconds % 60
       const durationStr = mins > 0 ? `${mins} min ${secs} sec` : `${secs} sec`
-      let text = `Focus Session — ${dateStr}\nDuration: ${durationStr}`
-      if (this.sessionStats.scene) text += `\nScene: ${this.sessionStats.scene}`
-      if (this.sessionStats.intention) text += `\nIntention: ${this.sessionStats.intention}`
+      let text = `${$t('focusedOn', { date: dateStr })}\n${$t('duration')}: ${durationStr}`
+      if (this.sessionStats.scene) text += `\n${$t('scene')}: ${this.sessionStats.scene}`
+      if (this.sessionStats.intention) text += `\n${$t('intention')}: ${this.sessionStats.intention}`
       text += '\n\n— Deep Still'
       navigator.clipboard.writeText(text).then(() => {
         this.copied = true
@@ -1773,6 +1777,7 @@ export default {
     padding: 32px 24px;
     min-width: unset;
     width: 100%;
+    gap: 24px;
   }
   .timer-number {
     font-size: 60px;
@@ -1782,6 +1787,98 @@ export default {
   }
   .focus-layout {
     padding: 16px;
+    padding-top: calc(16px + var(--safe-top));
+  }
+
+  .bottom-actions {
+    right: 16px;
+    bottom: calc(16px + var(--safe-bottom));
+    gap: 8px;
+  }
+  .bottom-actions .bottom-action-btn {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    justify-content: center;
+  }
+  .bottom-actions .bottom-action-btn span {
+    display: none;
+  }
+
+  .timer-card.layout-scene {
+    left: 12px;
+    right: 12px;
+    top: auto;
+    bottom: calc(64px + var(--safe-bottom));
+    width: auto;
+    max-width: 480px;
+    margin: 0 auto;
+    transform: translate(0, 0) scale(1);
+  }
+  .timer-card.layout-scene.running {
+    transform: translate(0, 0) scale(0.96);
+  }
+
+  .scene-author {
+    left: 16px;
+    top: 72px;
+    bottom: auto;
+  }
+
+  .stats-card {
+    width: calc(100% - 32px);
+    max-width: 320px;
+    padding: 24px 20px 20px;
+  }
+  .stats-metrics {
+    gap: 12px;
+  }
+  .adjust-panel {
+    width: calc(100% - 32px);
+    max-width: 320px;
+  }
+  .adjust-row-control .glass-slider {
+    width: 90px;
+  }
+
+  .fullscreen-hint {
+    bottom: calc(24px + var(--safe-bottom));
+  }
+}
+
+@media (max-width: 400px) {
+  .timer-number {
+    font-size: 44px;
+  }
+  .timer-colon {
+    font-size: 36px;
+  }
+  .duration-chip,
+  .custom-trigger {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .timer-progress {
+    width: 220px;
+  }
+}
+
+@media (max-height: 500px) {
+  .timer-card {
+    gap: 16px;
+    padding: 20px 24px;
+    max-height: calc(100dvh - 120px);
+    overflow-y: auto;
+  }
+  .timer-number {
+    font-size: 44px;
+  }
+  .timer-colon {
+    font-size: 36px;
+  }
+  .timer-progress {
+    width: 200px;
   }
 }
 </style>

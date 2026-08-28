@@ -1,9 +1,11 @@
 <template>
-  <router-view v-slot="{ Component, route }">
-    <transition :name="transitionName" mode="out-in">
-      <component :is="Component" :key="route.fullPath" />
-    </transition>
-  </router-view>
+  <div @contextmenu.prevent>
+    <router-view v-slot="{ Component, route }">
+      <transition :name="transitionName" mode="out-in">
+        <component :is="Component" :key="route.fullPath" />
+      </transition>
+    </router-view>
+  </div>
 </template>
 
 <script>
@@ -34,6 +36,8 @@ export default {
   --radius-md: 24px;
   --radius-lg: 32px;
   --transition-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .fade-enter-active,
@@ -76,6 +80,26 @@ button > * {
   cursor: pointer !important;
 }
 
+button,
+.glass-btn,
+.control-btn,
+.duration-chip,
+.back-btn,
+.scene-card,
+.continue-btn,
+.exit-btn,
+.lang-btn,
+.right-action-btn,
+.bottom-action-btn,
+.bkg-choice,
+.sample-item,
+.footer-history-btn,
+.footer-coffee-btn,
+a,
+input {
+  touch-action: manipulation;
+}
+
 :root, html, body, #app, * {
   user-select: none !important;
 }
@@ -84,5 +108,11 @@ input,
 textarea,
 select {
   user-select: text !important;
+}
+
+@media (max-width: 600px) {
+  .parallax-toggle {
+    display: none !important;
+  }
 }
 </style>

@@ -6,15 +6,15 @@
 
     <div class="landing-content" :style="contentParallaxStyle">
       <div class="hero-text">
-        <div class="hero-badge">Deep Still</div>
+        <div class="hero-badge">{{ t('deepStill') }}</div>
         <h1 class="hero-title">{{ titleLine1 }}<br />{{ titleLine2 }}</h1>
         <p class="hero-desc">
-          Deep focus, deep calm.<br />
-          A mindful space for uninterrupted work.<br />
-          Choose your scene, set your intention, and begin.
+          {{ t('tagline1') }}<br />
+          {{ t('tagline2') }}<br />
+          {{ t('tagline3') }}
         </p>
         <button class="glass-btn" @click="$router.push('/scenes')">
-          <span>Begin your session</span>
+          <span>{{ t('beginSession') }}</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="5" y1="12" x2="19" y2="12" />
             <polyline points="12 5 19 12 12 19" />
@@ -25,12 +25,10 @@
       <div class="landing-footer">
         <div class="footer-line"></div>
         <div class="footer-center">
-          <span class="footer-text">Click anywhere to explore</span>
-          <button class="footer-history-btn" @click.stop="$router.push('/history')">History</button>
+          <span class="footer-text">{{ t('clickAnywhere') }}</span>
+          <button class="footer-history-btn" @click.stop="$router.push('/history')">{{ t('history') }}</button>
           <span class="footer-dot">·</span>
-          <button class="footer-coffee-btn" type="button" @click.stop="goToKoFi">
-            Buy me a coffee
-          </button>
+          <button class="footer-coffee-btn" type="button" @click.stop="goToKoFi">{{ t('buyCoffee') }}</button>
         </div>
         <div class="footer-line"></div>
       </div>
@@ -38,25 +36,59 @@
 
     <div class="ambient-glow" :style="glowParallaxStyle"></div>
 
-    <button
-      class="bottom-action-btn parallax-toggle"
-      :class="{ active: parallaxEnabled }"
-      type="button"
-      @click="parallaxEnabled = !parallaxEnabled"
-    >
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2L2 7l10 5 10-5-10-5z" />
-        <path d="M2 17l10 5 10-5" />
-        <path d="M2 12l10 5 10-5" />
-      </svg>
-      <span>Parallax</span>
-    </button>
+    <div class="right-actions">
+      <div class="lang-wrapper">
+        <button class="lang-btn" type="button" @click.stop="langOpen = !langOpen">
+          {{ currentLang }}
+        </button>
+        <transition name="fade">
+          <div v-if="langOpen" class="lang-modal" @click.stop>
+            <div class="lang-panel">
+              <div class="lang-panel-header">
+                <span class="lang-panel-title">Select Language</span>
+                <button class="lang-close" type="button" @click="langOpen = false">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              </div>
+              <div class="lang-panel-body">
+                <button
+                  v-for="code in supported"
+                  :key="code"
+                  class="lang-option"
+                  :class="{ active: localeCode === code }"
+                  @click="selectLang(code)"
+                >
+                  <span class="lang-option-name">{{ langNames[code] }}</span>
+                  <span v-if="localeCode === code" class="lang-option-check">✓</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </transition>
+      </div>
+      <button
+        class="right-action-btn parallax-toggle"
+        :class="{ active: parallaxEnabled }"
+        type="button"
+        @click="parallaxEnabled = !parallaxEnabled"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+        <span>{{ t('parallax') }}</span>
+      </button>
+    </div>
 
     <transition name="fade">
       <div v-if="navigatingTo" class="exit-overlay" key="exit">
         <div class="exit-overlay-content">
           <span class="exit-overlay-icon">○</span>
-          <p class="exit-overlay-text">Opening Ko-fi...</p>
+          <p class="exit-overlay-text">{{ t('openingKofi') }}</p>
         </div>
       </div>
     </transition>
@@ -64,6 +96,12 @@
 </template>
 
 <script>
+import { state, setLocale, supported, $t } from '@/data/i18n'
+
+const langNames = {
+  en: 'English', zh: '中文', es: 'Español', ja: '日本語', de: 'Deutsch', ru: 'Русский',
+}
+
 export default {
   name: 'LandingPage',
   data() {
@@ -75,9 +113,17 @@ export default {
       parallaxEnabled: true,
       navigatingTo: null,
       navTimer: null,
+      langOpen: false,
     }
   },
   computed: {
+    localeCode() { return state.code },
+    currentLang() { return langNames[state.code] || 'English' },
+    supported() { return supported },
+    langNames() { return langNames },
+    t() {
+      return (key, params) => $t(key, params)
+    },
     contentParallaxStyle() {
       if (!this.parallaxEnabled || (!this.parallaxX && !this.parallaxY)) return {}
       return { transform: `translate(${this.parallaxX * 0.4}px, ${this.parallaxY * 0.4}px)` }
@@ -96,6 +142,10 @@ export default {
     },
   },
   methods: {
+    selectLang(code) {
+      setLocale(code)
+      this.langOpen = false
+    },
     onMouseMove(e) {
       if (!this.parallaxEnabled) {
         this.parallaxX = 0
@@ -117,7 +167,7 @@ export default {
   },
   mounted() {
     this.landingClickHandler = (e) => {
-      if (e.target.closest('.bottom-action-btn, .glass-btn, .footer-history-btn, .footer-coffee-btn')) return
+      if (e.target.closest('.right-action-btn, .right-actions, .glass-btn, .footer-history-btn, .footer-coffee-btn, .lang-btn')) return
       this.$router.push('/scenes')
     }
     document.addEventListener('click', this.landingClickHandler)
@@ -255,6 +305,123 @@ export default {
   transform: translateY(0);
 }
 
+/* --- Language selector --- */
+
+.lang-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 12px;
+  font-weight: 400;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s var(--transition-smooth);
+}
+
+.lang-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ─── Language modal ─── */
+
+.lang-wrapper {
+  position: relative;
+}
+
+.lang-modal {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  z-index: 100;
+  width: 220px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(14, 14, 16, 0.94);
+  backdrop-filter: blur(40px);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.lang-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 0;
+}
+
+.lang-panel-title {
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: -0.1px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.lang-close {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.lang-close:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.lang-panel-body {
+  padding: 12px 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lang-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  font-weight: 400;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  text-align: left;
+}
+
+.lang-option:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.lang-option.active {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.lang-option-check {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 13px;
+}
+
 .landing-footer {
   display: flex;
   align-items: center;
@@ -352,10 +519,18 @@ export default {
   to { opacity: 0.3; transform: translateY(0); }
 }
 
-.bottom-action-btn {
+.right-actions {
   position: fixed;
   right: 24px;
   bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  z-index: 10;
+}
+
+.right-action-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -369,22 +544,21 @@ export default {
   font-weight: 400;
   font-family: inherit;
   cursor: pointer;
-  z-index: 10;
   transition: all 0.3s var(--transition-smooth);
 }
 
-.bottom-action-btn:hover {
+.right-action-btn:hover {
   background: rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.9);
 }
 
-.bottom-action-btn.parallax-toggle.active {
+.right-action-btn.parallax-toggle.active {
   background: rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.25);
   color: #fff;
 }
 
-.bottom-action-btn.parallax-toggle.active svg {
+.right-action-btn.parallax-toggle.active svg {
   stroke: #fff;
 }
 
@@ -429,6 +603,49 @@ export default {
   }
   .hero-desc {
     font-size: 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  .landing-content {
+    padding: 32px 20px 28px;
+  }
+  .hero-badge {
+    font-size: 11px;
+    margin-bottom: 16px;
+  }
+  .hero-title {
+    font-size: clamp(40px, 11vw, 52px);
+  }
+  .hero-desc {
+    font-size: 13px;
+    margin-bottom: 32px;
+  }
+  .glass-btn {
+    padding: 14px 28px;
+    font-size: 14px;
+  }
+
+  .right-actions {
+    right: 16px;
+    bottom: auto;
+    top: calc(16px + var(--safe-top));
+  }
+
+  .lang-modal {
+    bottom: auto;
+    top: calc(100% + 8px);
+    right: 0;
+  }
+
+  .landing-footer {
+    gap: 12px;
+  }
+  .footer-center {
+    gap: 12px;
+  }
+  .footer-text {
+    display: none;
   }
 }
 </style>

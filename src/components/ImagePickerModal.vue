@@ -4,12 +4,12 @@
       <div class="picker-overlay" role="dialog" aria-modal="true">
         <div class="picker-dialog">
           <div class="picker-header">
-            <h2>Select a scene image</h2>
+            <h2>{{ t('selectSceneImage') }}</h2>
             <button class="close-btn" type="button" @click="$emit('close')" aria-label="Close modal">×</button>
           </div>
 
           <div class="picker-body">
-            <p class="picker-description">Choose a built-in sample or upload your own photo.</p>
+            <p class="picker-description">{{ t('pickerDesc') }}</p>
 
             <div
               class="sample-strip"
@@ -39,13 +39,29 @@
                 <div class="sample-meta">
                   <span class="sample-label">{{ sample.label }}</span>
                   <span v-if="sample.author" class="sample-author">{{ sample.author }}</span>
-                  <span v-if="sample.isCustom" class="sample-custom-badge">Custom</span>
+                  <span v-if="sample.isCustom" class="sample-custom-badge">{{ t('customBadge') }}</span>
                 </div>
+                <span
+                  v-if="sample.isCustom"
+                  class="sample-more-btn"
+                  role="button"
+                  tabindex="0"
+                  :aria-label="t('moreActions')"
+                  @click.stop="openContextMenu($event, sample)"
+                  @keydown.enter="openContextMenu($event, sample)"
+                  @keydown.space.prevent="openContextMenu($event, sample)"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="5" cy="12" r="1.7" />
+                    <circle cx="12" cy="12" r="1.7" />
+                    <circle cx="19" cy="12" r="1.7" />
+                  </svg>
+                </span>
               </button>
             </div>
 
             <label class="upload-label">
-              Upload image
+              {{ t('uploadImage') }}
               <input type="file" accept="image/*" @change="handleFileChange" />
             </label>
           </div>
@@ -63,7 +79,7 @@
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
           </svg>
-          <span>Rename</span>
+          <span>{{ t('rename') }}</span>
         </button>
         <div class="context-menu-divider"></div>
         <button class="context-menu-btn danger" type="button" @mousedown.stop @click="deleteCustom(contextMenu.sample)">
@@ -73,7 +89,7 @@
             <line x1="10" y1="11" x2="10" y2="17" />
             <line x1="14" y1="11" x2="14" y2="17" />
           </svg>
-          <span>Delete</span>
+          <span>{{ t('delete') }}</span>
         </button>
       </div>
 
@@ -83,7 +99,7 @@
   <div v-if="renameTarget" class="rename-overlay" @click.self="cancelRename">
     <div class="rename-panel">
       <div class="rename-panel-header">
-        <span class="rename-panel-title">Rename photo</span>
+        <span class="rename-panel-title">{{ t('renamePhoto') }}</span>
         <button class="rename-close" type="button" @click="cancelRename">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18" />
@@ -98,13 +114,13 @@
           class="rename-input"
           type="text"
           maxlength="40"
-          placeholder="Photo name"
+          placeholder="{{ t('photoName') }}"
           @keydown.enter="commitRename"
           @keydown.escape="cancelRename"
         />
         <div class="rename-actions">
-          <button class="rename-btn secondary" @click="cancelRename">Cancel</button>
-          <button class="rename-btn primary" @click="commitRename">Save</button>
+          <button class="rename-btn secondary" @click="cancelRename">{{ t('cancel') }}</button>
+          <button class="rename-btn primary" @click="commitRename">{{ t('save') }}</button>
         </div>
       </div>
     </div>
@@ -114,6 +130,7 @@
 <script>
 import { samples as originalSamples } from '@/data/samples'
 import { getSceneOrder, setSceneOrder, getCustomUploads, saveCustomUpload, deleteCustomUpload, renameCustomUpload } from '@/data/storage'
+import { $t } from '@/data/i18n'
 
 export default {
   name: 'ImagePickerModal',
@@ -134,6 +151,11 @@ export default {
       renameTarget: null,
       renameText: '',
     }
+  },
+  computed: {
+    t() {
+      return (key, params) => $t(key, params)
+    },
   },
   watch: {
     show(val) {
@@ -318,6 +340,14 @@ export default {
       e.preventDefault()
       e.stopPropagation()
       this.contextMenu = { sample, x: e.clientX, y: e.clientY }
+    },
+    openContextMenu(e, sample) {
+      if (!sample || !sample.isCustom) return
+      const menuW = 160
+      const menuH = 120
+      const x = Math.min(Math.max(e.clientX, 8), window.innerWidth - menuW - 8)
+      const y = Math.min(Math.max(e.clientY, 8), window.innerHeight - menuH - 8)
+      this.contextMenu = { sample, x, y }
     },
     renameCustom(sample) {
       if (!sample || !sample.isCustom) return
@@ -576,6 +606,30 @@ export default {
   border-color: rgba(255, 255, 255, 0.06);
 }
 
+.sample-more-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sample-more-btn:hover {
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+}
+
 .sample-item:hover {
   transform: translateY(-3px) scale(1.02);
   border-color: rgba(255, 255, 255, 0.22);
@@ -802,5 +856,32 @@ export default {
 .fade-scale-leave-to {
   opacity: 0;
   transform: scale(0.96);
+}
+
+@media (max-width: 600px) {
+  .picker-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .picker-dialog {
+    width: 100%;
+    max-height: 90dvh;
+    border-radius: 28px 28px 0 0;
+  }
+
+  .picker-header {
+    padding: 20px 20px 0;
+  }
+
+  .picker-body {
+    padding: 16px 20px calc(20px + var(--safe-bottom));
+    overflow-y: auto;
+  }
+
+  .sample-item {
+    flex: 0 0 160px;
+    min-height: 110px;
+  }
 }
 </style>
