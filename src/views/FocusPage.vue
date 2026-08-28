@@ -1828,7 +1828,7 @@ export default {
     top: 50%;
     width: auto;
     max-width: calc(100vw - 32px);
-    border-radius: 999px;
+    border-radius: 20px;
     transform: translate(-50%, -50%);
   }
   .timer-card.layout-scene.running {
@@ -1863,17 +1863,33 @@ export default {
     width: auto;
   }
   .timer-card.running .motivational-text {
-    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 14px;
+    width: max-content;
+    max-width: 90vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .timer-card.layout-scene.running .motivational-text {
+    top: auto;
+    bottom: 100%;
+    margin-top: 0;
+    margin-bottom: 14px;
   }
   .timer-card.running .timer-controls {
     gap: 4px;
   }
-  .timer-card.running .control-btn {
-    padding: 10px 16px;
-    font-size: 13px;
-  }
+  .timer-card.running .control-btn,
   .timer-card.running .control-btn.ghost {
-    padding: 10px;
+    padding: 12px;
+    border-radius: 50%;
+  }
+  .timer-card.running .control-btn span {
+    display: none;
   }
 
   .scene-author {
@@ -1899,7 +1915,7 @@ export default {
   }
 
   .fullscreen-hint {
-    bottom: calc(24px + var(--safe-bottom));
+    display: none;
   }
 }
 
