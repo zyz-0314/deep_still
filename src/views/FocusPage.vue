@@ -1816,8 +1816,64 @@ export default {
     margin: 0 auto;
     transform: translate(0, 0) scale(1);
   }
+
+  /* Running: collapse the big card into a compact horizontal pill */
+  .timer-card.running {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 16px 22px;
+    left: 50%;
+    top: 50%;
+    width: auto;
+    max-width: calc(100vw - 32px);
+    border-radius: 999px;
+    transform: translate(-50%, -50%);
+  }
   .timer-card.layout-scene.running {
-    transform: translate(0, 0) scale(0.96);
+    top: auto;
+    bottom: calc(64px + var(--safe-bottom));
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, 0);
+  }
+  .timer-card.running .timer-display {
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    width: auto;
+  }
+  .timer-card.running .duration-collapse,
+  .timer-card.running .intention-collapse {
+    display: none;
+  }
+  .timer-card.running .timer-number {
+    font-size: 40px;
+    transition: none;
+  }
+  .timer-card.running .timer-colon {
+    font-size: 32px;
+  }
+  .timer-card.running .timer-progress {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 8px;
+    width: auto;
+  }
+  .timer-card.running .motivational-text {
+    display: none;
+  }
+  .timer-card.running .timer-controls {
+    gap: 4px;
+  }
+  .timer-card.running .control-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  .timer-card.running .control-btn.ghost {
+    padding: 10px;
   }
 
   .scene-author {
