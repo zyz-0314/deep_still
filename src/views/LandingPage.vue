@@ -648,4 +648,41 @@ export default {
     display: none;
   }
 }
+
+@media (max-height: 520px) {
+  .landing-content {
+    overflow-y: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  .hero-badge {
+    font-size: 10px;
+    margin-bottom: 10px;
+  }
+  .hero-title {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+  .hero-desc {
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+  .glass-btn {
+    padding: 12px 24px;
+    font-size: 13px;
+  }
+  .right-actions {
+    top: calc(12px + var(--safe-top));
+    bottom: auto;
+    right: 16px;
+  }
+  .lang-modal {
+    top: calc(100% + 8px);
+    bottom: auto;
+  }
+  .landing-footer {
+    padding-top: 10px;
+  }
+}
 </style>

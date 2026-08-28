@@ -1864,21 +1864,15 @@ export default {
   }
   .timer-card.running .motivational-text {
     position: absolute;
-    top: 100%;
+    bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
-    margin-top: 14px;
+    margin-bottom: 14px;
     width: max-content;
     max-width: 90vw;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-  .timer-card.layout-scene.running .motivational-text {
-    top: auto;
-    bottom: 100%;
-    margin-top: 0;
-    margin-bottom: 14px;
   }
   .timer-card.running .timer-controls {
     gap: 4px;
